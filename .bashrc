@@ -23,12 +23,12 @@
   export TERM="xterm-256color"
   export HISTCONTROL=ignoredups:erasedups:ignorespace
   export EDITOR="micro"
-  export VISUAL="xed"
   export MANPAGER="most"
   export PAGER="most"
   export PATH="/root/.local/bin:$HOME/.cargo/bin:$HOME/.local/bin:$HOME/.local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$HOME/.local/share/flatpak/exports/bin:/var/lib/flatpak/exports/bin:$HOME/.config/bash/path"
   
   ### ENV ###
+    export shrc="/boot/config/user/dotfiles/.bashrc"
     export XDG_CONFIG_HOME="$HOME/.config"
     export XDG_DATA_HOME="$HOME/.local/share"
     export XDG_CACHE_HOME="$HOME/.cache"
@@ -53,25 +53,8 @@ cdown () {
     N=$1
   while [[ $((--N)) >  0 ]]
     do
-        echo "$N" |  figlet -c | lolcat &&  sleep 1
+        echo "$N" &&  sleep 1
     done
-}
-
-GIT_CLONE_DIR="$HOME/git-clone"
-function gco() { 
-    if [[ -z "$1" ]]; then
-        echo "Usage: git-clone-output <repository-url>"
-        return 1
-    fi
-    local repo_url=$1
-    local repo_name=$(basename "$repo_url" .git)
-    local output_dir=$GIT_CLONE_DIR
-    pushd "$output_dir"    
-    echo "Cloning $repo_url to $output_dir ..."
-    git clone "$repo_url" "$output_dir"
-    
-    echo "Output directory: $output_dir"0
-    popd
 }
 
 # ARCHIVE EXTRACTION
@@ -117,15 +100,11 @@ up () {
   fi
 }
 # ALIASES
-alias ep="$EDITOR \"$HOME/.bashrc\" && source \"$HOME/.bashrc\""
+alias top="htop"
+alias ep="$EDITOR \"$shrc\" && source \"$shrc\" && cp \"$shrc\" \"$HOME/\""
 alias nano="$EDITOR"
 alias ed="$EDITOR"
-alias ls='exa -al --color=always --group-directories-first' # my preferred listing
-alias aptls='sudo apt-get update && clear && sudo apt list --upgradeable'
-#alias apts='apt-cache search'
-alias aptsu='sudo apt update && clear && apt-cache search'
-alias aptuu='sudo apt update && clear && sudo apt upgrade -y'
-alias aptu='sudo apt update'
+alias ls='exa -la --color=always --group-directories-first'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -133,10 +112,6 @@ alias df='df -h'
 alias du='du -sch'
 alias dua='du -sch * | sort -h'
 alias free='free -m'
-alias lynx='lynx -cfg=~/.config/lynx/lynx.cfg -lss=~/.config/lynx/lynx.lss -vikeys'
-alias vifm='./.config/vifm/scripts/vifmrun'
-alias ncmpcpp='ncmpcpp ncmpcpp_directory=$HOME/.config/ncmpcpp/'
-alias mocp='mocp -M "$XDG_CONFIG_HOME"/moc -O MOCDir="$XDG_CONFIG_HOME"/moc'
 alias rsync='rsync -avh --info=progress2'
 alias rsync-np='rsync -vhrlptgoD --info=progress2'
 alias 000='chmod -R 000'
@@ -151,8 +126,6 @@ alias psa="ps auxf"
 alias psgrep="ps aux | grep -v grep | grep -i -e VSZ -e"
 alias psmem='ps auxf | sort -nr -k 4'
 alias pscpu='ps auxf | sort -nr -k 3'
-# Merge Xresources
-alias merge='xrdb -merge ~/.Xresources'
 # git
 alias addup='git add -u'
 alias addall='git add .'
@@ -168,37 +141,6 @@ alias tag='git tag'
 alias newtag='git tag -a'
 # get error messages from journalctl
 alias jctl="journalctl -p 3 -xb"
-# gpg encryption
-# verify signature for isos
-alias gpg-check="gpg2 --keyserver-options auto-key-retrieve --verify"
-# receive the key of a developer
-alias gpg-retrieve="gpg2 --keyserver-options auto-key-retrieve --receive-keys"
-# Play audio files in current dir by type
-export AUDIOP='deadbeef'
-alias playwav="$AUDIOP *.wav &&"
-alias playogg="$AUDIOP *.ogg &&"
-alias playmp3="$AUDIOP *.mp3 &&"
-# Play video files in current dir by type
-export VIDEOP="vlc"
-alias playavi='$ *.avi &&'
-alias playmov='vlc *.mov &&'
-alias playmp4='vlc *.mp4 &&'
-export AUDIOA=''
-export VIDEOA=''
-export DLD="$HOME/smb/downloDownloads"
-export DLM="$HOME/smb/music/tjh/ytdlp"
-export YTDLFN='%(title)s.%(ext)s'
-export YTDL="$DLD/$YTDLFN"
-alias aac="yt-dlp -U; yt-dlp --audio-format aac -o \'$YTDL\'"
-alias best="yt-dlp -U;yt-dlp --audio-format best -o \'$YTDL\'"
-alias flac="yt-dlp -U;yt-dlp --audio-format flac -o \'$YTDL\'"
-alias m4a="yt-dlp -U --audio-format m4a -o \"$YTDL\""
-alias config="/usr/bin/git --git-dir=$HOME/dotfiles --work-tree=$HOME"
-alias tb="nc termbin.com 9999"
-
-export XOS="$HOME/.config/tjhos-mintc"
-
-
 ### STARSHIP ###
 eval "$(starship init bash)"
 . "/home/tjh/.local/cargo/env"
